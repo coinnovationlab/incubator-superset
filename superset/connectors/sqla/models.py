@@ -23,7 +23,7 @@ from superset.connectors.base.models import BaseColumn, BaseDatasource, BaseMetr
 from superset.jinja_context import get_template_processor
 from superset.models.core import Database
 from superset.models.helpers import QueryResult
-from superset.models.helpers import set_perm
+from superset.models.helpers import set_perm, set_ds_perm_on_role
 from superset.utils import DTTM_ALIAS, QueryStatus
 
 
@@ -717,3 +717,4 @@ class SqlaTable(Model, BaseDatasource):
 
 sa.event.listen(SqlaTable, 'after_insert', set_perm)
 sa.event.listen(SqlaTable, 'after_update', set_perm)
+sa.event.listen(SqlaTable, 'after_insert', set_ds_perm_on_role)

@@ -9,9 +9,10 @@ import json
 import logging
 import re
 
-from flask import escape, Markup
+from flask import escape, Markup, g
 from flask_appbuilder.models.decorators import renders
 from flask_appbuilder.models.mixins import AuditMixin
+from flask_appbuilder.security.sqla.models import assoc_permissionview_role
 import humanize
 import sqlalchemy as sa
 from sqlalchemy import and_, or_, UniqueConstraint
@@ -21,6 +22,7 @@ import yaml
 
 from superset import sm
 from superset.utils import QueryStatus
+import superset_config as conf
 
 
 class ImportMixin(object):
@@ -344,3 +346,46 @@ def set_perm(mapper, connection, target):  # noqa
 
     # add to view menu if not already exists
     merge_perm(sm, 'datasource_access', target.get_perm(), connection)
+    if target.__tablename__ == 'dbs':
+        merge_perm(sm, 'database_access', target.get_perm(), connection)
+
+def set_db_perm_on_role(mapper, connection, target):  #noqa
+    """
+    Give database access permission to database creator, i.e., the authenticated user
+    """
+    #pv=={permission: 'database_access', view_menu: '[myDB].(id:1)'}
+    pv = sm.find_permission_view_menu('database_access', target.get_perm())
+    
+    if pv:
+        if g.user:
+            #if user has role tenant of an org, assign pv to that role
+            for role in g.user.roles:
+                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                    logging.info('Adding permission %s to role %s', pv, role)
+                    if pv not in role.permissions:
+                        connection.execute(
+                            #add to relation PermissionView-Role
+                            assoc_permissionview_role.insert()
+                            .values(permission_view_id=pv.id,role_id=role.id),
+                        )
+
+def set_ds_perm_on_role(mapper, connection, target):  #noqa
+    """
+    Give datasource access permission to datasource creator, i.e., the authenticated user
+    """
+    #pv=={permission: 'datasource_access', view_menu: '[myDB].[myTable](id:8)'}
+    pv = sm.find_permission_view_menu('datasource_access', target.get_perm())
+    
+    if pv:
+        if g.user:
+            #if user has role tenant of an org, assign pv to that role
+            for role in g.user.roles:
+                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                    logging.info('Adding permission %s to role %s', pv, role)
+                    if pv not in role.permissions:
+                        connection.execute(
+                            #add to relation PermissionView-Role
+                            assoc_permissionview_role.insert()
+                            .values(permission_view_id=pv.id,role_id=role.id),
+                        )
+

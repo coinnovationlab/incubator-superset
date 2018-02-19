@@ -35,7 +35,7 @@ from sqlalchemy_utils import EncryptedType
 
 from superset import app, db, db_engine_specs, sm, utils
 from superset.connectors.connector_registry import ConnectorRegistry
-from superset.models.helpers import AuditMixinNullable, ImportMixin, set_perm
+from superset.models.helpers import AuditMixinNullable, ImportMixin, set_perm, set_db_perm_on_role
 from superset.viz import viz_types
 install_aliases()
 from urllib import parse  # noqa
@@ -820,6 +820,7 @@ class Database(Model, AuditMixinNullable, ImportMixin):
 
 sqla.event.listen(Database, 'after_insert', set_perm)
 sqla.event.listen(Database, 'after_update', set_perm)
+sqla.event.listen(Database, 'after_insert', set_db_perm_on_role)
 
 
 class Log(Model):
