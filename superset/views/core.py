@@ -49,6 +49,7 @@ from .base import (
     generate_download_headers, get_error_msg, get_user_roles,
     json_error_response, SupersetFilter, SupersetModelView, YamlExportMixin,
 )
+from .sco_database_filter import DatabaseFilter
 
 config = app.config
 stats_logger = config.get('STATS_LOGGER')
@@ -243,6 +244,7 @@ class DatabaseView(SupersetModelView, DeleteMixin, YamlExportMixin):  # noqa
             'service account, but impersonate the currently logged on user '
             'via hive.server2.proxy.user property.'),
     }
+    base_filters = [['id', DatabaseFilter, lambda: []]]
     label_columns = {
         'expose_in_sqllab': _('Expose in SQL Lab'),
         'allow_ctas': _('Allow CREATE TABLE AS'),
