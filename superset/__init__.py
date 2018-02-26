@@ -166,4 +166,8 @@ flask_app_mutator = app.config.get('FLASK_APP_MUTATOR')
 if flask_app_mutator:
     flask_app_mutator(app)
 
-from superset import views  # noqa
+from superset import views, sco_endpoints  # noqa
+
+# Registering views for dashboard sharing
+app.add_url_rule('/dashboardsharing/<int:dashboard_id>', 'share_dashboard', sco_endpoints.share_dashboard)
+app.add_url_rule('/dashboard-viewonly/<int:dashboard_id>', 'viewonly_dashboard', sco_endpoints.viewonly_dashboard)
