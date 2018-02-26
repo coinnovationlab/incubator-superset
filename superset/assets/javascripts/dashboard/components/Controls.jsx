@@ -202,6 +202,12 @@ class Controls extends React.PureComponent {
               onChange={this.changeCss.bind(this)}
             />
           }
+          <ActionMenuItem
+            text={t('Share Dashboard')}
+            tooltip={t('Get shareable link to the dashboard')}
+            faIcon="share"
+            onClick={() => { window.location = `/dashboardsharing/${dashboard.id}`; }}
+          />
         </DropdownButton>
       </span>
     );
