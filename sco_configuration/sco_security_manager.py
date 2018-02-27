@@ -111,7 +111,7 @@ class AACSecurityManager(SecurityManager):
         Request AAC roles for the user that tries to authenticate
         {"id": 21,"scope": "application","role": "dash_test1","context": "sco.dashboard","authority": "dash_test1"}
         """
-        roles = [self.find_role('Gamma')] #list of roles to be returned
+        roles = [] #list of roles to be returned
         aac_roles = self._provider.get(conf.AAC_USER_ROLES_ENDPOINT, content_type='application/json')
         logging.debug("User roles from AAC: {0}".format(aac_roles.data))
         
@@ -133,6 +133,7 @@ class AACSecurityManager(SecurityManager):
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'TableModelView'))
                     logging.debug("Role has permissions: {0}".format(tenant_role.permissions))
                 roles.append(tenant_role)
+                roles.append(self.find_role('Gamma'))
         return roles
 
 
