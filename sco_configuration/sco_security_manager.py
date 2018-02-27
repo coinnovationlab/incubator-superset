@@ -116,18 +116,19 @@ class AACSecurityManager(SecurityManager):
         logging.debug("User roles from AAC: {0}".format(aac_roles.data))
         
         for role_dict in aac_roles.data:
-            if role_dict['role'].startswith(conf.AAC_ROLE_PREFIX) and role_dict['context'] and role_dict['context'] == conf.AAC_DASHBOARD_CONTEXT:
-                org = role_dict['role'][len(conf.AAC_ROLE_PREFIX):] #slice to take tenant name
+            if role_dict['role'] == conf.PROVIDER_ROLE and role_dict['context'] and role_dict['context'] == conf.AAC_DASHBOARD_CONTEXT:
+                roles.append(self.find_role('Admin'))
+            elif role_dict['role'].startswith(conf.AAC_ROLE_PREFIX) and role_dict['context'] and role_dict['context'] == conf.AAC_DASHBOARD_CONTEXT:
+                #slice to take tenant name
+                org = role_dict['role'][len(conf.AAC_ROLE_PREFIX):]
                 
                 tenant_role = self.find_role(conf.TENANT_ROLE_PREFIX + org)
-                if tenant_role:
-                    logging.debug("Role {0} exists".format(tenant_role))
-                    logging.debug("Role has permissions: {0}".format(tenant_role.permissions))
-                else:
+                if not tenant_role:
                     tenant_role = self.add_role(conf.TENANT_ROLE_PREFIX + org)
                     logging.debug("Role {0} created".format(tenant_role))
                     #add permissions to manage data
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DatabaseView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DatabaseView'))
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'TableModelView'))
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'TableModelView'))
                     logging.debug("Role has permissions: {0}".format(tenant_role.permissions))

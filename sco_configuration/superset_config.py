@@ -27,13 +27,14 @@ AAC_USER_ROLES_ENDPOINT = 'https://localhost:8243/aacroles/1.0.0/userroles/me'
 AAC_DASHBOARD_CONTEXT = 'sco.dashboard'
 AAC_ROLE_PREFIX = 'dash_'
 TENANT_ROLE_PREFIX = 'tenant_'
+PROVIDER_ROLE = 'PROVIDER'
 
 OAUTH_PROVIDERS = [
     {'name': 'aac', 'icon': 'fa-google', 'token_key': 'access_token',
         'remote_app': {
             'consumer_key': 'e294bd92-1189-4057-8336-49d9600477bf',
             'consumer_secret': 'b9d8c88b-17e7-40bc-9107-59110a610753',
-            'base_url': 'http://localhost:8080/aac/resources/token', #wrong
+            'base_url': 'http://localhost:8080/aac/resources/token', #not used?
             'request_token_params': {
               'scope': 'profile.basicprofile.me user.roles.me'
             },
@@ -42,23 +43,6 @@ OAUTH_PROVIDERS = [
             'authorize_url': 'http://localhost:8080/aac/eauth/authorize'}
     }
 ]
-
-"""
-OAUTH_PROVIDERS = [
-    {'name': 'google', 'icon': 'fa-google', 'token_key': 'access_token',
-        'remote_app': {
-            'consumer_key': '994837824492-d35vn6pj5ruje2v86eu0et9c32ivdvhk.apps.googleusercontent.com',
-            'consumer_secret': '0AC2t_r98HuY4J6wF4Lvws7M',
-            'base_url': 'https://www.googleapis.com/oauth2/v2/',
-            'request_token_params': {
-              'scope': 'email profile'
-            },
-            'request_token_url': None,
-            'access_token_url': 'https://accounts.google.com/o/oauth2/token',
-            'authorize_url': 'https://accounts.google.com/o/oauth2/auth'}
-    }
-]
-"""
 
 # Will allow user self registration (necessary for OAuth2)
 AUTH_USER_REGISTRATION = True
