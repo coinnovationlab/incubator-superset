@@ -66,7 +66,7 @@ PREREQUISITES:
 
 `superset runserver`
 
-NOTE: now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall be used instead are in "incubator-superset/sco_configuration" folder, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
+7. Now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall however be used from now on are in "incubator-superset/sco_configuration" folder, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
 
 `PYTHONPATH="${PYTHONPATH}:/path/to/incubator-superset/sco_configuration/"`
 
