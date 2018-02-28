@@ -29,7 +29,7 @@ from sqlalchemy.orm import backref, relationship
 from superset import conf, db, import_util, sm, utils
 from superset.connectors.base.models import BaseColumn, BaseDatasource, BaseMetric
 from superset.models.helpers import (
-  AuditMixinNullable, ImportMixin, QueryResult, set_perm,
+  AuditMixinNullable, ImportMixin, QueryResult, set_perm, set_db_perm_on_role, set_ds_perm_on_role,
 )
 from superset.utils import (
     DimSelector, DTTM_ALIAS, flasher, MetricPermException,
@@ -1337,6 +1337,10 @@ class DruidDatasource(Model, BaseDatasource):
             .all()
         )
 
+sa.event.listen(DruidCluster, 'after_insert', set_perm)
+sa.event.listen(DruidCluster, 'after_update', set_perm)
+sa.event.listen(DruidCluster, 'after_insert', set_db_perm_on_role)
 
 sa.event.listen(DruidDatasource, 'after_insert', set_perm)
 sa.event.listen(DruidDatasource, 'after_update', set_perm)
+sa.event.listen(DruidDatasource, 'after_insert', set_ds_perm_on_role)

@@ -18,6 +18,7 @@ from superset.views.base import (
     validate_json, YamlExportMixin,
 )
 from . import models
+from superset.views.sco_database_filter import DatabaseFilter
 
 
 class DruidColumnInlineView(CompactCRUDMixin, SupersetModelView):  # noqa
@@ -167,6 +168,7 @@ class DruidClusterModelView(SupersetModelView, DeleteMixin, YamlExportMixin):  #
         'broker_port': _('Broker Port'),
         'broker_endpoint': _('Broker Endpoint'),
     }
+    base_filters = [['id', DatabaseFilter, lambda: []]]
 
     def pre_add(self, cluster):
         security.merge_perm(sm, 'database_access', cluster.perm)

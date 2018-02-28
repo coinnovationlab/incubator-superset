@@ -346,38 +346,51 @@ def set_perm(mapper, connection, target):  # noqa
 
     # add to view menu if not already exists
     merge_perm(sm, 'datasource_access', target.get_perm(), connection)
-    if target.__tablename__ == 'dbs':
+    if target.__tablename__ == 'dbs' or target.__tablename__ == 'clusters':
         merge_perm(sm, 'database_access', target.get_perm(), connection)
 
 def set_db_perm_on_role(mapper, connection, target):  #noqa
     """
-    Give database access permission to database creator, i.e., the authenticated user
+    Give database and datasource access permission to database or druid cluster creator, i.e., the authenticated user
     """
-    #pv=={permission: 'database_access', view_menu: '[myDB].(id:1)'}
-    pv = sm.find_permission_view_menu('database_access', target.get_perm())
+    #pv=={permission: 'database_access', view_menu: '[myDBorCluster].(id:1)'}
+    pv1 = sm.find_permission_view_menu('database_access', target.get_perm())
     
-    if pv:
-        if g.user:
+    if pv1:
+        if g.user and g.user.roles:
             #if user has role tenant of an org, assign pv to that role
             for role in g.user.roles:
                 if role.name.startswith(conf.TENANT_ROLE_PREFIX):
-                    logging.info('Adding permission %s to role %s', pv, role)
-                    if pv not in role.permissions:
+                    logging.info('Adding permission %s to role %s', pv1, role)
+                    if pv1 not in role.permissions:
                         connection.execute(
                             #add to relation PermissionView-Role
                             assoc_permissionview_role.insert()
-                            .values(permission_view_id=pv.id,role_id=role.id),
+                            .values(permission_view_id=pv1.id,role_id=role.id),
+                        )
+    pv2 = sm.find_permission_view_menu('datasource_access', target.get_perm())
+    if pv2:
+        if g.user and g.user.roles:
+            #if user has role tenant of an org, assign pv to that role
+            for role in g.user.roles:
+                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                    logging.info('Adding permission %s to role %s', pv2, role)
+                    if pv2 not in role.permissions:
+                        connection.execute(
+                            #add to relation PermissionView-Role
+                            assoc_permissionview_role.insert()
+                            .values(permission_view_id=pv2.id,role_id=role.id),
                         )
 
 def set_ds_perm_on_role(mapper, connection, target):  #noqa
     """
-    Give datasource access permission to datasource creator, i.e., the authenticated user
+    Give datasource access permission to datasource or druid datasource creator, i.e., the authenticated user
     """
-    #pv=={permission: 'datasource_access', view_menu: '[myDB].[myTable](id:8)'}
+    #pv=={permission: 'datasource_access', view_menu: '[myDBorCluster].[myTable](id:8)'}
     pv = sm.find_permission_view_menu('datasource_access', target.get_perm())
     
     if pv:
-        if g.user:
+        if g.user and g.user.roles:
             #if user has role tenant of an org, assign pv to that role
             for role in g.user.roles:
                 if role.name.startswith(conf.TENANT_ROLE_PREFIX):

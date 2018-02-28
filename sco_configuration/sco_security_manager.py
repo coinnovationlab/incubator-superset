@@ -126,14 +126,36 @@ class AACSecurityManager(SecurityManager):
                 if not tenant_role:
                     tenant_role = self.add_role(conf.TENANT_ROLE_PREFIX + org)
                     logging.debug("Role {0} created".format(tenant_role))
-                    #add permissions to manage data
+                    
+                    #-------------------- TENANT PERMISSIONS TO MANAGE DATA --------------------
+                    #permissions for database
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DatabaseView'))
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DatabaseView'))
+                    #permissions for datasource, its columns and metrics
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'TableModelView'))
                     self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'TableModelView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'TableColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'TableColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_delete', 'TableColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'SqlMetricInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'SqlMetricInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_delete', 'SqlMetricInlineView'))
+                    #permissions for Druid cluster
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DruidClusterModelView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DruidClusterModelView'))
+                    #permissions for Druid datasource, its columns and metrics
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DruidDatasourceModelView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DruidDatasourceModelView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DruidColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DruidColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_delete', 'DruidColumnInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_add', 'DruidMetricInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_edit', 'DruidMetricInlineView'))
+                    self.add_permission_role(tenant_role, self.find_permission_view_menu('can_delete', 'DruidMetricInlineView'))
+                    #---------------------------------------------------------------------------
+                    
                     logging.debug("Role has permissions: {0}".format(tenant_role.permissions))
                 roles.append(tenant_role)
                 roles.append(self.find_role('Gamma'))
         return roles
-
 
