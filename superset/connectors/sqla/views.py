@@ -1,5 +1,5 @@
 """Views used by the SqlAlchemy connector"""
-from flask import flash, Markup, redirect
+from flask import flash, Markup, redirect, g
 from flask_appbuilder import CompactCRUDMixin, expose
 from flask_appbuilder.actions import action
 from flask_appbuilder.models.sqla.interface import SQLAInterface
@@ -228,6 +228,13 @@ class TableModelView(DatasourceModelView, DeleteMixin, YamlExportMixin):  # noqa
     }
 
     def pre_add(self, table):
+        if g.user and g.user.username and g.user.roles:
+            for role in g.user.roles:
+                pvm = sm.find_permission_view_menu('database_access', sm.find_view_menu(table.database.database_name))
+                print(pvm)
+                if pvm not in role.permissions:
+                    raise Exception('You do not have the privileges to create datasources in {}'.format(table.database.database_name))
+        
         with db.session.no_autoflush:
             table_query = db.session.query(models.SqlaTable).filter(
                 models.SqlaTable.table_name == table.table_name,
