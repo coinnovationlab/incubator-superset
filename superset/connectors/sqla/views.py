@@ -231,7 +231,6 @@ class TableModelView(DatasourceModelView, DeleteMixin, YamlExportMixin):  # noqa
         if g.user and g.user.username and g.user.roles:
             for role in g.user.roles:
                 pvm = sm.find_permission_view_menu('database_access', sm.find_view_menu(table.database.database_name))
-                print(pvm)
                 if pvm not in role.permissions:
                     raise Exception('You do not have the privileges to create datasources in {}'.format(table.database.database_name))
         

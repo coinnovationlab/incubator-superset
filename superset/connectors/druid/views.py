@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 import logging
 
-from flask import flash, Markup, redirect
+from flask import flash, Markup, redirect, g
 from flask_appbuilder import CompactCRUDMixin, expose
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_babel import gettext as __
@@ -258,6 +258,12 @@ class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin
     }
 
     def pre_add(self, datasource):
+        if g.user and g.user.username and g.user.roles:
+            for role in g.user.roles:
+                pvm = sm.find_permission_view_menu('database_access', sm.find_view_menu(datasource.cluster.cluster_name))
+                if pvm not in role.permissions:
+                    raise Exception('You do not have the privileges to create datasources in {}'.format(datasource.cluster.cluster_name))
+        
         with db.session.no_autoflush:
             query = (
                 db.session.query(models.DruidDatasource)
