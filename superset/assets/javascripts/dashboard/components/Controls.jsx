@@ -206,7 +206,7 @@ class Controls extends React.PureComponent {
             text={t('Share Dashboard')}
             tooltip={t('Get shareable link to the dashboard')}
             faIcon="share"
-            onClick={() => { window.location = `/dashboardsharing/${dashboard.id}`; }}
+            onClick={() => { window.location = `/dashboardsharing/share-dash/${dashboard.id}`; }}
           />
         </DropdownButton>
       </span>
