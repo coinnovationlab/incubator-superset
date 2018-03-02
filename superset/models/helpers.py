@@ -22,7 +22,7 @@ import yaml
 
 from superset import sm
 from superset.utils import QueryStatus
-import superset_config as conf
+from superset import conf
 
 
 class ImportMixin(object):
@@ -360,7 +360,7 @@ def set_db_perm_on_role(mapper, connection, target):  #noqa
         if g.user and g.user.roles:
             #if user has role tenant of an org, assign pv to that role
             for role in g.user.roles:
-                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                if role.name.startswith(conf.get('TENANT_ROLE_PREFIX')):
                     logging.info('Adding permission %s to role %s', pv1, role)
                     if pv1 not in role.permissions:
                         connection.execute(
@@ -373,7 +373,7 @@ def set_db_perm_on_role(mapper, connection, target):  #noqa
         if g.user and g.user.roles:
             #if user has role tenant of an org, assign pv to that role
             for role in g.user.roles:
-                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                if role.name.startswith(conf.get('TENANT_ROLE_PREFIX')):
                     logging.info('Adding permission %s to role %s', pv2, role)
                     if pv2 not in role.permissions:
                         connection.execute(
@@ -393,7 +393,7 @@ def set_ds_perm_on_role(mapper, connection, target):  #noqa
         if g.user and g.user.roles:
             #if user has role tenant of an org, assign pv to that role
             for role in g.user.roles:
-                if role.name.startswith(conf.TENANT_ROLE_PREFIX):
+                if role.name.startswith(conf.get('TENANT_ROLE_PREFIX')):
                     logging.info('Adding permission %s to role %s', pv, role)
                     if pv not in role.permissions:
                         connection.execute(
