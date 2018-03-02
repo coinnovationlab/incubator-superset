@@ -77,10 +77,12 @@
    `export PYTHONPATH`
 
 ### DATABASE DEPENDENCIES:
-In order to configure Superset connection with your databases of choice, you need to install the corresponding packages. See `https://superset.incubator.apache.org/installation.html#database-dependencies` for further instructions.
+In order to configure Superset connection with your databases of choice, you need to install the corresponding packages. See "https://superset.incubator.apache.org/installation.html#database-dependencies" for further instructions.
 
 ### AUTHENTICATION WITH OAuth2:
-Make sure that authentication type in "incubator-superset/sco\_configuration/superset\_config.py" is set as follows: `AUTH_TYPE = AUTH_OAUTH`
+Make sure that authentication type in "incubator-superset/sco\_configuration/superset\_config.py" is set as follows:
+
+`AUTH_TYPE = AUTH_OAUTH`
 
 #### Create a provider in AAC:
 1. Log in to AAC as admin and create a new provider (e.g. with domain `sco.dashboard`)
@@ -99,8 +101,13 @@ Make sure that authentication type in "incubator-superset/sco\_configuration/sup
 #### Notice the following properties in superset_config.py. You can change them if needed:
 
 `AAC\_USER\_PROFILE\_ENDPOINT = 'https://localhost:8243/aacprofile/1.0.0/basicprofile/me'`
+
 `AAC\_USER\_ROLES\_ENDPOINT = 'https://localhost:8243/aacroles/1.0.0/userroles/me'`
+
 `AAC\_DASHBOARD\_CONTEXT = 'sco.dashboard'`       #must match the name of the domain you created in AAC
+
 `AAC\_ROLE\_PREFIX = 'dash\_'`                    #role prefix expected for AAC users that are owners of an organization; AAC users with role <AAC_ROLE_PREFIX><org_name> will have role <TENANT_ROLE_PREFIX><org_name> in Superset
+
 `TENANT\_ROLE\_PREFIX = 'tenant_'`                #role prefix that Superset will give to AAC users that are owners of an organization
+
 `PROVIDER\_ROLE = 'PROVIDER'`                     #role of domain provider; a user that is provider of AAC\_DASHBOARD\_CONTEXT will have admin role in Superset
