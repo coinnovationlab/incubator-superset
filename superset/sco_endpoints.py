@@ -2,7 +2,6 @@ import logging
 import base64
 import requests
 import json
-from bs4 import BeautifulSoup
 from flask import g, url_for, redirect, request, flash, Response
 from flask_login import login_user
 from flask_appbuilder import const, expose
