@@ -24,7 +24,6 @@ from superset import sm
 from superset.utils import QueryStatus
 from superset import conf
 
-
 class ImportMixin(object):
     export_parent = None
     # The name of the attribute
@@ -353,6 +352,10 @@ def set_db_perm_on_role(mapper, connection, target):  #noqa
     """
     Give database and datasource access permission to database or druid cluster creator, i.e., the authenticated user
     """
+    if target.database_name == 'main':
+        #skip the rest if main database is being created
+        return
+    
     #pv=={permission: 'database_access', view_menu: '[myDBorCluster].(id:1)'}
     pv1 = sm.find_permission_view_menu('database_access', target.get_perm())
     
