@@ -1,81 +1,84 @@
-PREREQUISITES:
+### PREREQUISITES:
 - Python 2.7 or 3.4
 
+### INSTALLATION OF NODE, YARN AND DEPENDENCIES
 0. (Optional but recommended) Create a virtual environment and install everything there (`virtualenv` comes by default with Python 3.4, must be installed with 2.7):
 
-`virtualenv myenv`
+   `virtualenv myenv`
 
-`source myenv\bin\activate`
+   `source myenv/bin/activate`
 
 1. Get source code:
 
-`git clone https://github.com/coinnovationlab/incubator-superset.git`
+   `git clone https://github.com/coinnovationlab/incubator-superset.git`
 
-`cd incubator-superset`
+   `cd incubator-superset`
 
-`git checkout 0.22.1-sco`
+   `git checkout 0.22.1-sco`
 
 2. Install Node.js and Yarn (instructions taken from "https://www.digitalocean.com/community/tutorials/how-to-install-nodejs-on-ubuntu-16-04" and "https://yarnpkg.com/lang/en/docs/install/", work for Ubuntu 16.04, not tested on other versions):
 
-`curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh`
+   `curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh`
 
-`sudo bash nodesource_setup.sh`
+   `sudo bash nodesource_setup.sh`
 
-`sudo apt-get install nodejs`
+   `sudo apt-get install nodejs`
 
-`curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
+   `curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
 
-`echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
+   `echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
 
-`sudo apt update`
+   `sudo apt update`
 
-`sudo apt install yarn`
+   `sudo apt install yarn`
 
-`sudo apt install nodejs-legacy`
+   `sudo apt install nodejs-legacy`
 
 3. Install OS dependencies (from Superset documentation):
 
-`sudo apt install build-essential libssl-dev libffi-dev python-dev python-pip libsasl2-dev libldap2-dev`
+   `sudo apt install build-essential libssl-dev libffi-dev python-dev python-pip libsasl2-dev libldap2-dev`
 
 4. Set dependencies:
 
-`cd .../incubator-superset/superset/assets`
-`yarn`
+   `cd .../incubator-superset/superset/assets`
+   `yarn`
 
-(`npm run sync-backend` may be necessary only during development; try first skipping this line)
+   (`npm run sync-backend` may be necessary only during development; try first skipping this line)
 
-`yarn run build`
+   `yarn run build`
 
 5. Install Flask-Oauthlib, i.e. Flask library for OAuth2:
 
-`pip install Flask-OAuthlib`
+   `pip install Flask-OAuthlib`
 
-6. Install and launch Superset (from "https://superset.incubator.apache.org/installation.html"):
+### INSTALLATION OF SUPERSET
 
-`cd .../incubator-superset`
+1. Install and launch Superset (from "https://superset.incubator.apache.org/installation.html"):
 
-`python setup.py install` or `pip install .`
+   `cd .../incubator-superset`
 
-`fabmanager create-admin --app superset`
+   `python setup.py install` or `pip install .`
 
-`superset db upgrade`
+   `fabmanager create-admin --app superset`
 
-`superset init`
+   `superset db upgrade`
 
-(`superset load_examples` optional, loads some sample datasources, slices and dashboards)
+   `superset init`
 
-`superset runserver`
+   (`superset load_examples` optional, loads some sample datasources, slices and dashboards)
 
-7. Now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall however be used from now on are in "incubator-superset/sco_configuration" folder, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
+   `superset runserver`
 
-`PYTHONPATH="${PYTHONPATH}:/path/to/incubator-superset/sco_configuration/"`
+2. Now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall however be used from now on are in "incubator-superset/sco_configuration" folder, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
 
-`export PYTHONPATH`
+   `PYTHONPATH="${PYTHONPATH}:/path/to/incubator-superset/sco_configuration/"`
 
-DATABASE DEPENDENCIES:
+   `export PYTHONPATH`
+
+### DATABASE DEPENDENCIES:
 In order to configure Superset connection with your databases of choice, you need to install the corresponding packages. See `https://superset.incubator.apache.org/installation.html#database-dependencies` for further instructions.
 
-AUTHENTICATION WITH OAuth2:
+### AUTHENTICATION WITH OAuth2:
 1. Make sure that authentication type in "incubator-superset/sco\_configuration/superset\_config.py" is set as follows: `AUTH_TYPE = AUTH_OAUTH`
 
 2. Create a provider in AAC:
