@@ -338,12 +338,24 @@ class CsvToDatabaseView(SimpleFormView):
 
         csv_file = form.csv_file.data
         _upload_file(csv_file)
-        table = SqlaTable(table_name=form.name.data)
         database = (
             db.session.query(models.Database)
             .filter_by(sqlalchemy_uri=form.data.get('con'))
             .one()
         )
+        #check if user can add tables
+        if g.user and g.user.username and g.user.roles:
+            pvm = sm.find_permission_view_menu('database_access', database.get_perm())
+            pvm_all = sm.find_permission_view_menu('all_database_access', 'all_database_access')
+            for role in g.user.roles:
+                if pvm not in role.permissions and pvm_all not in role.permissions and role == g.user.roles[-1]:
+                    no_priv_msg = 'You do not have the privileges to create datasources in {}'.format(database.database_name)
+                    flash(no_priv_msg, 'error')
+                    os.remove(os.path.join(config['UPLOAD_FOLDER'], csv_file.filename))
+                    return redirect(url_for('TableModelView.list'))
+        ###
+        
+        table = SqlaTable(table_name=form.name.data)
         table.database = database
         table.database_id = database.id
         try:

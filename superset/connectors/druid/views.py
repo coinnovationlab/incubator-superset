@@ -258,13 +258,16 @@ class DruidDatasourceModelView(DatasourceModelView, DeleteMixin, YamlExportMixin
     }
 
     def pre_add(self, datasource):
-        if g.user and g.user.username and g.user.roles:
-            for role in g.user.roles:
-                pvm = sm.find_permission_view_menu('database_access', sm.find_view_menu(datasource.cluster.cluster_name))
-                if pvm not in role.permissions:
-                    raise Exception('You do not have the privileges to create datasources in {}'.format(datasource.cluster.cluster_name))
-        
         with db.session.no_autoflush:
+            #check if user can create tables in this database
+            if g.user and g.user.username and g.user.roles:
+                pvm = sm.find_permission_view_menu('database_access', datasource.cluster.get_perm())
+                pvm_all = sm.find_permission_view_menu('all_database_access', 'all_database_access')
+                for role in g.user.roles:
+                    if pvm not in role.permissions and pvm_all not in role.permissions and role == g.user.roles[-1]:
+                        raise Exception('You do not have the privileges to create datasources in {}'.format(datasource.cluster.cluster_name))
+            ###
+        
             query = (
                 db.session.query(models.DruidDatasource)
                 .filter(models.DruidDatasource.datasource_name ==

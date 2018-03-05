@@ -228,13 +228,16 @@ class TableModelView(DatasourceModelView, DeleteMixin, YamlExportMixin):  # noqa
     }
 
     def pre_add(self, table):
-        if g.user and g.user.username and g.user.roles:
-            for role in g.user.roles:
-                pvm = sm.find_permission_view_menu('database_access', sm.find_view_menu(table.database.database_name))
-                if pvm not in role.permissions:
-                    raise Exception('You do not have the privileges to create datasources in {}'.format(table.database.database_name))
-        
         with db.session.no_autoflush:
+            #check if user can create tables in this database
+            if g.user and g.user.username and g.user.roles:
+                pvm = sm.find_permission_view_menu('database_access', table.database.get_perm())
+                pvm_all = sm.find_permission_view_menu('all_database_access', 'all_database_access')
+                for role in g.user.roles:
+                    if pvm not in role.permissions and pvm_all not in role.permissions and role == g.user.roles[-1]:
+                        raise Exception('You do not have the privileges to create datasources in {}'.format(table.database.database_name))
+            ###
+        
             table_query = db.session.query(models.SqlaTable).filter(
                 models.SqlaTable.table_name == table.table_name,
                 models.SqlaTable.schema == table.schema,
