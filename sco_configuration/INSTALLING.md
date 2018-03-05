@@ -113,3 +113,15 @@ Make sure that authentication type in "incubator-superset/sco\_configuration/sup
 `TENANT\_ROLE\_PREFIX = 'tenant_'`                #role prefix that Superset will give to AAC users that are owners of an organization
 
 `PROVIDER\_ROLE = 'PROVIDER'`                     #role of domain provider; a user that is provider of AAC\_DASHBOARD\_CONTEXT will have admin role in Superset
+
+### UPGRADING SUPERSET
+
+`cd incubator-superset`
+
+`git pull`
+
+`pip install . --upgrade`
+
+`superset db upgrade`
+
+`superset init`
