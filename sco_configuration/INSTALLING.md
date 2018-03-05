@@ -54,7 +54,9 @@
 
 ### INSTALLATION OF SUPERSET
 
-1. Install and launch Superset (from "https://superset.incubator.apache.org/installation.html"):
+1. Move folder "sco_configuration" outside of "incubator-superset", to a destination of your choice.
+
+2. Install and launch Superset (from "https://superset.incubator.apache.org/installation.html"):
 
    `cd incubator-superset`
 
@@ -70,7 +72,7 @@
 
    `superset runserver`
 
-2. Now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall however be used from now on are in "incubator-superset/sco_configuration" folder, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
+3. Now you have Superset running with its default configuration and username-password authentication. The config file and the custom security manager that shall however be used from now on are in the "sco_configuration" folder which you just moved, therefore the path to this folder must be addedd to your PYTHONPATH env variable, e.g. by adding the following at the end of your ~/.bashrc file:
 
    `PYTHONPATH="${PYTHONPATH}:/path/to/incubator-superset/sco_configuration/"`
 
